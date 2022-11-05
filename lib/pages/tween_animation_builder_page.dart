@@ -25,57 +25,48 @@ class HSVColorSelector extends StatefulWidget {
 
 class _HSVColorSelectorState extends State<HSVColorSelector> {
   double _hue = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AnimatedContainer(
-          color: HSVColor.fromAHSV(1.0, _hue, 1.0, 1.0).toColor(),
-          duration: const Duration(milliseconds: 1500),
-          width: 200,
-          height: 200,
-        ),
-        const SizedBox(height: 48.0),
         TweenAnimationBuilder<double>(
-          tween: Tween<double>(
-            begin: 0.0,
-            end: _hue,
-          ),
+          tween: Tween<double>(begin: 0.0, end: _hue),
           duration: const Duration(milliseconds: 1500),
           builder: (context, hue, child) {
-            final hsvColor = HSVColor.fromAHSV(1.0, hue, 1.0, 1.0);
+            var hsvColor = HSVColor.fromAHSV(1.0, hue, 1.0, 1.0);
             return Container(
-              width: 200,
-              height: 200,
+              height: 200.0,
+              width: 200.0,
               color: hsvColor.toColor(),
             );
           },
         ),
-        const SizedBox(height: 48.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Container(
-            height: 30.0,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  for (var h = 0.0; h < 360.0; h += 1)
-                    HSVColor.fromAHSV(1.0, h, 1.0, 1.0).toColor()
-                ],
-                stops: [
-                  for (var h = 0.0; h < 360.0; h += 1) h / 360.0,
-                ],
-              ),
+        const SizedBox(height: 50.0),
+        Container(
+          height: 40.0,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                for (var hsv = 0.0; hsv <= 360; hsv++)
+                  HSVColor.fromAHSV(1.0, hsv, 1.0, 1.0).toColor(),
+              ],
+              stops: [
+                for (var hsv = 0.0; hsv <= 360; hsv++) hsv.toDouble() / 360.0,
+              ],
             ),
           ),
         ),
+        const SizedBox(height: 15.0),
         Slider.adaptive(
           value: _hue,
           min: 0,
-          max: 360,
-          onChanged: (newValue) => setState(() => _hue = newValue),
-        ),
+          max: 360.0,
+          onChanged: (value) => setState(() {
+            _hue = value;
+          }),
+        )
       ],
     );
   }
